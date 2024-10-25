@@ -1,6 +1,6 @@
 /*****************************************************************************
 File name: Vonepic.c
-Description: CNN手写数字识别的单图片识别程序，需要在训练好的网络参数文件 network_parameter.txt 。
+Description: CNN手写数字识别的单图片识别程序，需要在训练好的网络参数文件 network_parameter 。
 采用 C 语言编写，基于 CNN 模型，使用 MNIST 手写数字数据集进行训练和测试。
 
 Author: liximing
@@ -28,6 +28,7 @@ https://github.com/IammyselfYBX/Handwritten-digit-recognition-based-on-CNN
 #include <conio.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include "logger.hh"
 
 // 定义一个宏 TESTCUNT，其值为 1000
 #define TESTCUNT 1000
@@ -157,10 +158,12 @@ void traverseDirectory(const char *directory, char **randomFilePath, int *fileCo
 BOOL read_file(struct parameter *parameter_dest)
 {
     FILE *fp;
-    fp = fopen("network_parameter.txt", "rb");
+    fp = fopen("network_parameter", "rb");
     if (fp == NULL)
     {
-        printf("文件打开失败，请检查网络参数文件是否在训练集文件夹内！\n");
+        //printf("File opening failed, please check whether the network parameters file is in the training set folder!\n");
+        logger(ERROR_,"network_parameter opening failed.\n");
+        logger(WARN,"Please check whether the network parameters file is in the training set folder!\n");
         return FALSE;
     }
     struct parameter *parameter_tmp = NULL;
@@ -180,7 +183,7 @@ BOOL read_file(struct parameter *parameter_dest)
 BOOL write_para_to_file(struct parameter *parameter_file)
 {
     FILE *fp;
-    fp = fopen("network_parameter.txt", "wb");
+    fp = fopen("network_parameter", "wb");
     struct parameter *parameter_tmp;
     parameter_tmp = (struct parameter *)malloc(sizeof(struct parameter));
 
@@ -334,7 +337,8 @@ int test_onePIC(struct parameter *parameter2, struct result *data2, char *FileNa
     FILE *fp;
     // char s[100];
     // sprintf(s,"%s%d%s","Training_set//Test_set//",i+1,".bmp");
-    printf("\n打开的文件名:%s\n",FileName);
+    
+    logger(INFO,"Open file name: %s\n",FileName);
     // 随即选中一个文件，并给出子目录名和文件名。
 
     // 显示文件完整目录,主要是为了看，为了看一下究竟是哪个文件
@@ -346,8 +350,8 @@ int test_onePIC(struct parameter *parameter2, struct result *data2, char *FileNa
 
     if (fp == NULL)
     {
-        printf("Cann't open the file!\n");
-        //  system("pause");
+        //printf("Cann't open the file!\n");
+        logger(ERROR_,"Cann't open the file %s!\n",FileName);
         return -1;
     }
     fseek(fp, 62, SEEK_SET);
@@ -420,38 +424,79 @@ int test_onePIC(struct parameter *parameter2, struct result *data2, char *FileNa
     }
     return k;
 }
+void enableAnsiSupport() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD mode;
+    GetConsoleMode(hConsole, &mode);
+    SetConsoleMode(hConsole, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+}
+
+
+
+void welcome() {
+    printf(RED   " __      __       .__                                \n" RESET);
+    printf(RED   "/  \\    /  \\ ____ |  |   ____  ____   _____   ____  \n" RESET);
+    printf(GREEN "\\   \\/\\/   // __ \\|  | _/ ___\\/  _ \\ /     \\_/ __ \\ \n" RESET);
+    printf(GREEN " \\        /\\  ___/|  |_\\  \\__(  <_> )  Y Y  \\  ___/ \n" RESET);
+    printf(BLUE  "  \\__\\/\\  /  \\___  >____/\\___  >____/|__|_|  /\\___  >\n" RESET);
+    printf(BLUE  "       \\/       \\/          \\/            \\/     \\/ \n" RESET);
+
+    printf("Welcome to use Neural network handwritten digit recognition Test program!\n");
+}
 
 int main()
 {
+    SetConsoleOutputCP(CP_UTF8); // 设置输出代码页为 UTF-8
+    enableAnsiSupport();
+    welcome();
     struct parameter *storage;                                        // 定义存放网络参数的结构体
     (storage) = (struct parameter *)malloc(sizeof(struct parameter)); // 动态分配空间
     struct result *data;
     (data) = (struct result *)malloc(sizeof(struct result));
 
-    printf("raad former para input \n");
+   
+    logger(INFO,"Reading former parameter input......\n");
     BOOL h = read_file(storage);
     if (!h)
     {
-        printf("no parameters, start to initianlize para...\n");
+        
+        logger(ERROR_,"No parameters,Please to initianlize para!\n");
+        logger(ERROR_,"Test program will quit...\n");
+        _getch();
         return 0;
     }
     else
-        printf("para read OK!\n");
+    {
+        logger(INFO,"Reading former parameter input success!\n");
+    }
     
     char s[100];
 
-    sprintf(s,"%s","test01.bmp");   
-    int k = test_onePIC(storage, data, s);
-    printf("Prediction value is %d\n", k);
+    int i = 1;
+    while (1){
+        logger(INFO,"Please input the file name:(q to quit\n");
+        scanf("%s", s);
+        if(s[0] == 'q' || s[0] == 'Q'){
+            break;
+        }
+        int k = test_onePIC(storage, data, s);
+        logger(INFO,"The prediction value is %d\n\n", k);
+        
 
-   sprintf(s,"%s","test02.bmp");   
-    k = test_onePIC(storage, data, s);
-    printf("Prediction value is %d\n", k);
+    }
 
-   sprintf(s,"%s","test03.bmp");   
-    k = test_onePIC(storage, data, s);
-    printf("Prediction value is %d\n", k);
+    // sprintf(s,"%s","1.bmp");   
+    // int k = test_onePIC(storage, data, s);
+    // printf("Prediction value is %d\n", k);
 
+    // sprintf(s,"%s","8.bmp");   
+    // k = test_onePIC(storage, data, s);
+    // printf("Prediction value is %d\n", k);
+
+    // sprintf(s,"%s","9.bmp");   
+    // k = test_onePIC(storage, data, s);
+    // printf("Prediction value is %d\n", k);
+     _getch();
 
     return 0;
 }

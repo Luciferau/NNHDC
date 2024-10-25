@@ -166,7 +166,7 @@ void traverseDirectory(const char *directory, char **randomFilePath, int *fileCo
 BOOL read_file(struct parameter *parameter_dest)
 {
     FILE *fp;
-    fp = fopen("network_parameter.txt", "rb");
+    fp = fopen("network_parameter", "rb");
     if (fp == NULL)
     {
         //printf("No para files Found!\n");
@@ -190,7 +190,7 @@ BOOL read_file(struct parameter *parameter_dest)
 BOOL write_para_to_file(struct parameter *parameter_file)
 {
     FILE *fp;
-    fp = fopen("network_parameter.txt", "wb");
+    fp = fopen("network_parameter", "wb");
     struct parameter *parameter_tmp;
     parameter_tmp = (struct parameter *)malloc(sizeof(struct parameter));
 
@@ -1098,7 +1098,7 @@ int main()
     //while (!_kbhit()) {}
     _getch(); 
 
-    system("cls");
+   
                                                                
     int h = DataLoader();
     if (h == 0)

@@ -1,6 +1,6 @@
 /*****************************************************************************
 File name: VerificationHWRCNN.c
-Description: CNN手写数字识别的验证程序，需要在训练好的网络参数文件 network_parameter.txt 。
+Description: CNN手写数字识别的验证程序，需要在训练好的网络参数文件 network_parameter 。
 采用 C 语言编写，基于 CNN 模型，使用 MNIST 手写数字数据集进行训练和测试。
 
 Author: liximing
@@ -158,7 +158,7 @@ void traverseDirectory(const char *directory, char **randomFilePath, int *fileCo
 BOOL read_file(struct parameter *parameter_dest)
 {
     FILE *fp;
-    fp = fopen("network_parameter.txt", "rb");
+    fp = fopen("network_parameter", "rb");
     if (fp == NULL)
     {
         //printf("File opening failed, please check whether the network parameters file is in the training set folder!\n");
@@ -183,7 +183,7 @@ BOOL read_file(struct parameter *parameter_dest)
 BOOL write_para_to_file(struct parameter *parameter_file)
 {
     FILE *fp;
-    fp = fopen("network_parameter.txt", "wb");
+    fp = fopen("network_parameter", "wb");
     struct parameter *parameter_tmp;
     parameter_tmp = (struct parameter *)malloc(sizeof(struct parameter));
 
@@ -477,7 +477,7 @@ void test_network(struct parameter *parameter2, struct result *data2)
         //    printf("预测值是%d的概率：%lf\n",i,result[i]);
         // }
         count++;
-        printf("all %d pics. the %d pic. real number is: %d, our prediction value is: %d %s\n", testCount,count, parentDirectoryNumber, k, parentDirectoryNumber == k ? "correct." : "wrong......");
+        printf("All %d pics. the %d pic. Real number is: %d, our prediction value is: %d %s\n", testCount,count, parentDirectoryNumber, k, parentDirectoryNumber == k ? "correct." : "wrong......");
         if (k == parentDirectoryNumber)
         {
             countCroreect++;
@@ -485,7 +485,7 @@ void test_network(struct parameter *parameter2, struct result *data2)
         }
         RatioCorrect = countCroreect / (count * 1.0);
     }
-    printf("all %d pics,correct is %d, correct rate is:%.3f\n", count, countCroreect, RatioCorrect);
+    printf("All %d pics,correct is %d, orrect rate is:%.3f\n", count, countCroreect, RatioCorrect);
     return;
 }
 
