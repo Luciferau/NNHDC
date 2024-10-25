@@ -513,6 +513,7 @@ int main()
     {
         //printf("no parameters, start to initianlize para...\n");
         logger(WARN,"No parameters, start to initianlize para...\n");
+        logger(WARN,"Quiting program...\n");
         _getch();
         return 0;
     }

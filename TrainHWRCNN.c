@@ -169,7 +169,7 @@ BOOL read_file(struct parameter *parameter_dest)
     fp = fopen("network_parameter", "rb");
     if (fp == NULL)
     {
-        //printf("No para files Found!\n");
+         
         logger(WARN,"No parameter files found!\n");
         return FALSE;
     }
@@ -821,9 +821,9 @@ void drawProgressBar(int progress, int total) {
 
     // 完成时更改颜色
     if (progress == total) {
-        printf(" " RED "[FINISED]" RESET); // 完成状态
+        printf(" " RED "    [FINISED]" RESET); // 完成状态
     } else if (percentage >= 0.5) {
-        printf(" " YELLOW "[NEARING]" RESET); // 接近完成状态
+        printf(" " YELLOW "[NEARING...] " RESET); // 接近完成状态
     } else  {
         printf(" [TRAINING]"); // 进行中状态
     }
@@ -1141,7 +1141,8 @@ int main()
         epoch = 100;
     }
    
-    printf("\033[01;32mStart train...\033[0;0m\n");
+    //printf("\033[01;32mStart train...\033[0;0m\n");
+    printf("\tStart train...\n");
     train(epoch, storage, data);
     write_para_to_file(storage);
     test_network(storage, data);

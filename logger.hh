@@ -41,9 +41,9 @@ void logger(enum LogLevel level, const char* format, ...) {
     // 输出日志级别
     printf("%s", color); // 设置颜色
     if (level == ERROR_) {
-        printf("[ERROR] "); // 输出 ERROR 标识
+        printf("[ERRO] "); // 输出 ERROR 标识
     } else {
-        printf("[%s]  ", (level == INFO) ? "INFO" : "WARN"); // 输出 INFO 或 WARN 标识
+        printf("[%s] ", (level == INFO) ? "INFO" : "WARN"); // 输出 INFO 或 WARN 标识
     }
     
 
