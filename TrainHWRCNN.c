@@ -1132,7 +1132,7 @@ int main()
     else
         //printf("para read OK!\n");
         logger(INFO,"Parameters readed!\n");
-    printf("\033[01;32minput train times:\033[0;0m  ");
+    printf(GREEN,"input train times:  ",RESET);
     
     int epoch;
     scanf("%d", &epoch);
