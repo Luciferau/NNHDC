@@ -3,10 +3,10 @@ File name: VerificationHWRCNN.c
 Description: CNN手写数字识别的验证程序，需要在训练好的网络参数文件 network_parameter 。
 采用 C 语言编写，基于 CNN 模型，使用 MNIST 手写数字数据集进行训练和测试。
 
-Author: liximing
+Author: Lucifer
 Version: 1.0
 Date:
-update:2024年10月8日。
+update:2024年10月28日。
 
 
 参考文献：

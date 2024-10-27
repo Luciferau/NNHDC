@@ -1,10 +1,10 @@
 /*****************************************************************************
 File name: TrainHWRCNN.c
 Description: CNN手写数字识别 训练代码，少部分测试代码，仅用于学习。
-Author: liximing
+Author: Lucifer
 Version: 1.0
 Date:
-update:2024年10月8日。
+update:2024年10月28日。
 可以运转的版本。
 
 参考文献：
