@@ -7,6 +7,25 @@
 #include <stdarg.h>
 
 
+#define RESET   ""
+#define GREEN   ""
+#define YELLOW  ""
+#define RED     ""
+#define BLUE    ""
+#define MAGENTA ""
+#define CYAN    ""
+
+// 如果 Windows 系统支持 ANSI 则使用这些定义
+#ifdef _WIN32
+#include <windows.h>
+#undef RESET
+#undef GREEN
+#undef YELLOW
+#undef RED
+#undef BLUE
+#undef MAGENTA
+#undef CYAN
+
 #define RESET   "\033[0m"
 #define GREEN   "\033[32m"
 #define YELLOW  "\033[33m"
@@ -14,6 +33,35 @@
 #define BLUE    "\033[34m"
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
+
+int supportsANSI() {
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut == INVALID_HANDLE_VALUE) {
+        return 0;
+    }
+
+    DWORD dwMode = 0;
+    if (!GetConsoleMode(hOut, &dwMode)) {
+        return 0;
+    }
+
+    // 启用 ENABLE_VIRTUAL_TERMINAL_PROCESSING 标志以支持 ANSI
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    if (!SetConsoleMode(hOut, dwMode)) {
+        return 0;  // 无法启用 ANSI
+    }
+
+    return 1;  // 支持 ANSI
+}
+
+#else
+
+
+int supportsANSI() {
+    return 1;  // 在类 Unix 系统上假设支持 ANSI
+}
+#endif
+
 
 
 enum LogLevel {
@@ -24,6 +72,9 @@ enum LogLevel {
 
 
 const char* getColor(enum LogLevel level) {
+     if (!supportsANSI()) {
+        return "";  // 如果不支持 ANSI，则返回空字符串
+    }
     switch (level) {
         case ERROR_: return RED; // 红色
         case INFO:  return GREEN; // 绿色
@@ -35,7 +86,7 @@ const char* getColor(enum LogLevel level) {
 
 void logger(enum LogLevel level, const char* format, ...) {
     
-    const char* reset = "\033[0m"; // 重置颜色
+    //const char* reset = "\033[0m"; // 重置颜色
     const char* color = getColor(level); // 获取对应日志级别的颜色
 
     // 输出日志级别
@@ -48,7 +99,7 @@ void logger(enum LogLevel level, const char* format, ...) {
     
 
      // 重置颜色并换行
-    printf("%s", reset);
+    printf("%s", RESET);
 
     // 处理可变参数
     va_list args;
